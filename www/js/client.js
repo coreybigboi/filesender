@@ -144,8 +144,18 @@ window.filesender.client = {
                     to_sign += '&' + data;
                 } else {
                     // Await the return value - because outer function is now ASYNC
-                    let value = await data.text();
-                    to_sign += '&'+value;
+                    let buf = await data.arrayBuffer();
+                    let data_ab = new Uint8Array(buf);
+
+                    let enc = new TextEncoder();
+                    to_sign += '&';
+                    let to_sign_ab = enc.encode(to_sign);
+
+                    let mergedArray = new Uint8Array(to_sign_ab.length + data_ab.length);
+                    mergedArray.set(to_sign_ab);
+                    mergedArray.set(data_ab, to_sign_ab.length);
+
+                    to_sign = mergedArray;
                 }
             }else data = undefined;
 
