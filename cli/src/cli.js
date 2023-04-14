@@ -79,18 +79,19 @@ const request = http.get(base_url+"/filesender-config.js.php", function(response
        // global.window.filesender.config.terasender_enabled = true;
         
 
-//        const blob = new Blob(['This file was generated as a test.']);
-//        transfer.addFile('test.txt', blob, errorHandler);
-
-	//create a blob from a file
-        var blob = new Blob([fs.readFileSync('test.txt')]);
-
+        //Add the files
         var errorHandler;
-        transfer.addFile('test.txt', blob, errorHandler);
-        transfer.addFile('test2.txt', blob, errorHandler);
+        for (var i = 0; i < options.files.length; i++) {
+            var blob = new Blob([fs.readFileSync(options.files[i])]);
+            //get the file name without the path, supports both unix and windows paths
+            var filename = options.files[i].split('/').pop().split('\\').pop();
+            transfer.addFile(filename, blob, errorHandler);
+        }
 
-        //set the recipient
-        transfer.addRecipient(username, undefined);
+        //add the recipients
+        for (var i = 0; i < options.recipients.length; i++) {
+            transfer.addRecipient(options.recipients[i], undefined);
+        }
     
         //set the expiry date for 7 days in the future
         let expiry = (new Date(Date.now() + 7 * 24 * 60 * 60 * 1000));
@@ -111,14 +112,15 @@ const request = http.get(base_url+"/filesender-config.js.php", function(response
 function parseArgumentsIntoOptions(rawArgs) {
  const args = arg(
    {
-     '-v': Boolean,
-     '-i': Boolean,
-     '-p': Boolean,
-     '-s': String,
-     '-m': String,
-     '-u': String,
-     '-a': String,
-     '-r': [ String ],
+     '--verbose': Boolean,
+     '--insecure': Boolean,
+     '--progress': Boolean,
+     '--subject': String,
+     '--message': String,
+     '--username': String,
+     '--apikey': String,
+     '--recipients': [ String ],
+     '--file': [ String ],
      '-v': '--verbose',
      '-p': '--progress',
      '-i': '--insecure',
@@ -127,6 +129,7 @@ function parseArgumentsIntoOptions(rawArgs) {
      '-u': '--username',
      '-a': '--apikey',
      '-r': '--recipients',
+     '-f': '--file',
    },
    {
      argv: rawArgs.slice(2),
@@ -137,7 +140,7 @@ function parseArgumentsIntoOptions(rawArgs) {
    git: args['--git'] || false,
    template: args._[0],
    runInstall: args['--install'] || false,
+   recipients: args['--recipients'] || [],
+   files : args['--file'] || [],
  };
 }
-
-
