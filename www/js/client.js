@@ -145,15 +145,15 @@ window.filesender.client = {
                 } else {
                     // Await the return value - because outer function is now ASYNC
                     let buf = await data.arrayBuffer();
-                    let data_ab = new Uint8Array(buf);
+                    data = new Uint8Array(buf);
 
                     let enc = new TextEncoder();
                     to_sign += '&';
                     let to_sign_ab = enc.encode(to_sign);
 
-                    let mergedArray = new Uint8Array(to_sign_ab.length + data_ab.length);
+                    let mergedArray = new Uint8Array(to_sign_ab.length + data.length);
                     mergedArray.set(to_sign_ab);
-                    mergedArray.set(data_ab, to_sign_ab.length);
+                    mergedArray.set(data, to_sign_ab.length);
 
                     to_sign = mergedArray;
                 }
