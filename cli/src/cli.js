@@ -92,6 +92,12 @@ const request = http.get(base_url+"/filesender-config.js.php", function(response
         for (var i = 0; i < options.recipients.length; i++) {
             transfer.addRecipient(options.recipients[i], undefined);
         }
+
+        // add the subject
+        transfer.subject = options.subject;
+
+        //add message
+        transfer.message = options.message;
     
         //set the expiry date for 7 days in the future
         let expiry = (new Date(Date.now() + 7 * 24 * 60 * 60 * 1000));
@@ -142,5 +148,7 @@ function parseArgumentsIntoOptions(rawArgs) {
    runInstall: args['--install'] || false,
    recipients: args['--recipients'] || [],
    files : args['--file'] || [],
+   message : args['--message'] || "",
+   subject : args['--subject'] || "",
  };
 }
