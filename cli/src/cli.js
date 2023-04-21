@@ -72,11 +72,11 @@ const request = http.get(base_url+"/filesender-config.js.php", function(response
         global.window.filesender.client.remote_user = username;
         transfer.from = username;
 
-	//Turn on reader support for API transfers
+	      //Turn on reader support for API transfers
         global.window.filesender.supports.reader = true;
-	global.window.filesender.client.api_key = apikey;
+	      global.window.filesender.client.api_key = apikey;
 
-       // global.window.filesender.config.terasender_enabled = true;
+        // global.window.filesender.config.terasender_enabled = true;
         
 
         //Add the files
@@ -99,10 +99,12 @@ const request = http.get(base_url+"/filesender-config.js.php", function(response
         //add message
         transfer.message = options.message;
     
-        //set the expiry date for 7 days in the future
-        let expiry = (new Date(Date.now() + 7 * 24 * 60 * 60 * 1000));
-        //format as a string in the yyyy-mm-dd format
+        // set the expiry date to the daysValid argument if exists, otherwise use default value in config file
+        let daysValid = options.daysValid ? options.daysValid : default_transfer_days_valid
+        let expiry = (new Date(Date.now() + daysValid * 24 * 60 * 60 * 1000));
+        // format as a string in the yyyy-mm-dd format
         transfer.expires = expiry.toISOString().split('T')[0];
+        console.log(`[Log] File will be valid until ${transfer.expires}, (${daysValid} day(s) from now)`)
 
         //set the security token
         //global.window.filesender.client.authentication_required = true;
@@ -127,6 +129,7 @@ function parseArgumentsIntoOptions(rawArgs) {
      '--apikey': String,
      '--recipients': [ String ],
      '--file': [ String ],
+     '--daysValid' : [ Number],
      '-v': '--verbose',
      '-p': '--progress',
      '-i': '--insecure',
@@ -150,5 +153,6 @@ function parseArgumentsIntoOptions(rawArgs) {
    files : args['--file'] || [],
    message : args['--message'] || "",
    subject : args['--subject'] || "",
+   daysValid : args['--daysValid'],
  };
 }
