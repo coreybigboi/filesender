@@ -46,6 +46,14 @@ export function cli(args) {
     return;
   }
 
+  if (options.apikey != undefined){
+    apikey = options.apikey;
+  }
+
+  if (options.username != undefined){
+    username = options.username;
+  }
+
 const request = http.get(base_url+"/filesender-config.js.php", function(response) {
    response.pipe(file);
 
@@ -72,6 +80,10 @@ const request = http.get(base_url+"/filesender-config.js.php", function(response
         global.window.filesender.ui.log = function(message) {
           if (options.verbose)
             console.log('[log] ' + message);
+        }
+        global.window.filesender.log = function(message) {
+          if (options.verbose)
+            console.log('[logger] ' + message);
         }
         global.window.filesender.ui.validators = {};
         global.window.filesender.ui.validators.email = /^[a-z0-9!#$%&'*+\/=?^_\`\{|\}~-]+(?:\.[a-z0-9!#$%&'*+\/=?^_\`\{|\}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+(?:[a-z]{2,})$/i
@@ -169,5 +181,7 @@ function parseArgumentsIntoOptions(rawArgs) {
    subject : args['--subject'] || "",
    daysValid : args['--daysValid'],
    verbose: args['--verbose'] || false,
+   apikey: args['--apikey'],
+   username: args['--username'],
  };
 }
