@@ -4,6 +4,8 @@ import { Blob } from 'buffer';
 const http = require('https'); //used to download the config file
 const fs = require('fs'); //used to save the config file
 const ini = require('ini') //used to parse the config file
+const FileReader = require('filereader') //used in the crypto_blob_reader.js
+global.FileReader = FileReader;
 
 //get the users home directory
 const home = process.env.HOME || process.env.USERPROFILE;
@@ -46,6 +48,8 @@ const request = http.get(base_url+"/filesender-config.js.php", function(response
         require('../../www/js/client.js');
         require('../../www/js/filesender.js');
         require('../../www/js/transfer.js');
+        require('../../www/js/crypter/crypto_app.js');
+        require('../../www/js/crypter/crypto_blob_reader.js');
 
         //add some required functions
         global.window.filesender.ui = {};
@@ -85,6 +89,7 @@ const request = http.get(base_url+"/filesender-config.js.php", function(response
             var blob = new Blob([fs.readFileSync(options.files[i])]);
             //get the file name without the path, supports both unix and windows paths
             var filename = options.files[i].split('/').pop().split('\\').pop();
+            blob.name = filename;
             transfer.addFile(filename, blob, errorHandler);
         }
 
@@ -98,6 +103,9 @@ const request = http.get(base_url+"/filesender-config.js.php", function(response
 
         //add message
         transfer.message = options.message;
+
+        //encryption
+        transfer.encryption = true;
     
         //set the expiry date for 7 days in the future
         let expiry = (new Date(Date.now() + 7 * 24 * 60 * 60 * 1000));
