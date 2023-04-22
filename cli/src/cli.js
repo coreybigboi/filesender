@@ -54,6 +54,8 @@ export function cli(args) {
     username = options.username;
   }
 
+  if (!options.verbose) process.stdout.write("Getting config...")
+
 const request = http.get(base_url+"/filesender-config.js.php", function(response) {
    response.pipe(file);
 
@@ -61,6 +63,7 @@ const request = http.get(base_url+"/filesender-config.js.php", function(response
    file.on("finish", () => {
         file.close();
         if (options.verbose) console.log("Config downloaded");
+        if (!options.verbose) process.stdout.write("uploading...")
 
         ////get all the required files
         require('../filesender-config.js');
@@ -138,6 +141,10 @@ const request = http.get(base_url+"/filesender-config.js.php", function(response
         //start the transfer
         transfer.start();
 
+        transfer.oncomplete = function( transfer, time ) {
+          if (!options.verbose) process.stdout.write("done.")
+        }
+        
    });
 });
 
