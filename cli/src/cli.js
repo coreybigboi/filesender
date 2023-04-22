@@ -34,6 +34,18 @@ export function cli(args) {
   let options = parseArgumentsIntoOptions(args);
   if (options.verbose) console.log("Downloading config...");
 
+  if (options.files.length == 0) {
+    console.log("No files specified");
+    console.log("Use '--file ./file1.txt' to specify a file to upload");
+    return;
+  }
+
+  if (options.recipients.length == 0) {
+    console.log("No recipients specified");
+    console.log("Use '--recipient someone@example.com' to specify a recipient for the transfer");
+    return;
+  }
+
 const request = http.get(base_url+"/filesender-config.js.php", function(response) {
    response.pipe(file);
 
