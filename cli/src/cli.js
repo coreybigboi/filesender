@@ -25,13 +25,14 @@ global.$ = global.jQuery = require( "jquery" )( window );
 global.window = global;
 
 //get the config file
-console.log("Downloading config...");
+
 const file = fs.createWriteStream("filesender-config.js");
 
 
 export function cli(args) {
 
   let options = parseArgumentsIntoOptions(args);
+  if (options.verbose) console.log("Downloading config...");
 
 const request = http.get(base_url+"/filesender-config.js.php", function(response) {
    response.pipe(file);
@@ -39,7 +40,7 @@ const request = http.get(base_url+"/filesender-config.js.php", function(response
    // after download completed close filestream
    file.on("finish", () => {
         file.close();
-        console.log("Config downloaded");
+        if (options.verbose) console.log("Config downloaded");
 
         ////get all the required files
         require('../filesender-config.js');
@@ -57,6 +58,7 @@ const request = http.get(base_url+"/filesender-config.js.php", function(response
             console.log('[raw error] ' + text);
         }
         global.window.filesender.ui.log = function(message) {
+          if (options.verbose)
             console.log('[log] ' + message);
         }
         global.window.filesender.ui.validators = {};
@@ -104,7 +106,7 @@ const request = http.get(base_url+"/filesender-config.js.php", function(response
         let expiry = (new Date(Date.now() + daysValid * 24 * 60 * 60 * 1000));
         // format as a string in the yyyy-mm-dd format
         transfer.expires = expiry.toISOString().split('T')[0];
-        console.log(`[Log] File will be valid until ${transfer.expires}, (${daysValid} day(s) from now)`)
+        global.window.filesender.ui.log(`File will be valid until ${transfer.expires}, (${daysValid} day(s) from now)`)
 
         //set the security token
         //global.window.filesender.client.authentication_required = true;
@@ -154,5 +156,6 @@ function parseArgumentsIntoOptions(rawArgs) {
    message : args['--message'] || "",
    subject : args['--subject'] || "",
    daysValid : args['--daysValid'],
+   verbose: args['--verbose'] || false,
  };
 }
