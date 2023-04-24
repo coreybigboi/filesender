@@ -13,12 +13,20 @@
  * outage at startup.
  */
 try {
-    importScripts(
-	'../../filesender-config.js.php',
-	'../../js/crypter/crypto_common.js',
-	'../../js/crypter/crypto_blob_reader.js',
-	'../../js/crypter/crypto_app.js'
-    );
+    // importScripts(
+	// '../../filesender-config.js.php',
+	// '../../js/crypter/crypto_common.js',
+	// '../../js/crypter/crypto_blob_reader.js',
+	// '../../js/crypter/crypto_app.js'
+    // );
+
+    require('../../../cli/filesender-config.js');
+    require('../../js/crypter/crypto_common.js');
+    require('../../js/crypter/crypto_blob_reader.js');
+    require('../../js/crypter/crypto_app.js');
+
+    var XMLHttpRequest = require("../../../cli/node_modules/xmlhttprequest").XMLHttpRequest;
+    global.XMLHttpRequest = XMLHttpRequest;
 }
 catch( e ) {
     postMessage({
@@ -33,11 +41,11 @@ catch( e ) {
 
 function isIE11()
 {
-    if(navigator.userAgent.indexOf('MSIE')!==-1
-       || navigator.appVersion.indexOf('Trident/') > -1)
-    {
-        return true;
-    }
+    //if(navigator.userAgent.indexOf('MSIE')!==-1
+    //   || navigator.appVersion.indexOf('Trident/') > -1)
+    //{
+    //    return true;
+    //}
     return false;
 }
 function notIE11()

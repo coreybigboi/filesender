@@ -1,5 +1,8 @@
 import arg from 'arg';// Command line interface to be run through node.js
 import { Blob } from 'buffer';
+import Worker from 'web-worker';
+global.Worker = Worker;
+
 
 const http = require('https'); //used to download the config file
 const fs = require('fs'); //used to save the config file
@@ -70,6 +73,7 @@ const request = http.get(base_url+"/filesender-config.js.php", function(response
         require('../../www/js/client.js');
         require('../../www/js/filesender.js');
         require('../../www/js/transfer.js');
+        require('../../www/js/terasender/terasender.js');
 
         //add some required functions
         global.window.filesender.ui = {};

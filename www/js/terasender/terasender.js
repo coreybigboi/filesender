@@ -624,7 +624,7 @@ window.filesender.terasender = {
     createWorker: function() {
         var id = this.workers.length;
         
-        var workerinterface = new Worker(filesender.config.terasender_worker_file);
+        var workerinterface = new Worker("../www/js/terasender/terasender_worker.js");
         workerinterface.id = id;
         workerinterface.file_id = null;
         workerinterface.offset = 0;

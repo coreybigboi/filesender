@@ -19,7 +19,7 @@ window.filesender.supports.reader = typeof(FileReader) !== 'undefined';
 window.filesender.supports.crypto = typeof(crypto) !== 'undefined' && typeof(crypto.subtle) !== 'undefined'
 
 if (window.filesender.supports.workers) {
-    w = new Worker('js/crypter/crypto_test.js');
+    w = new Worker('../www/js/crypter/crypto_test.js');
     w.onmessage = function(event) {
         window.filesender.supports.workerCrypto = event.data;
     }
