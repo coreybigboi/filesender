@@ -54,6 +54,9 @@ export function cli(args) {
     username = options.username;
   }
 
+  //if the user wants --verbose, then don't show progress as it is already given in the verbose output
+  if (options.verbose) options.progress = false;
+
   if (!options.verbose) process.stdout.write("Getting config...")
 
 const request = http.get(base_url+"/filesender-config.js.php", function(response) {
@@ -64,6 +67,9 @@ const request = http.get(base_url+"/filesender-config.js.php", function(response
         file.close();
         if (options.verbose) console.log("Config downloaded");
         if (!options.verbose) process.stdout.write("uploading...")
+
+        //if the user wants to see the progress, add a new line
+        if (options.progress) process.stdout.write("\n");
 
         ////get all the required files
         require('../filesender-config.js');
@@ -138,10 +144,26 @@ const request = http.get(base_url+"/filesender-config.js.php", function(response
         //set the security token
         //global.window.filesender.client.authentication_required = true;
 
+        //if the user wants to see the progress (--progress) then show it
+        transfer.onprogress = function( file , done) {
+          var uploaded = file.fine_progress ? file.fine_progress : file.uploaded;
+          var total = file.size;
+          var percent = Math.round(uploaded / total * 100);
+          if (options.progress) {
+            process.stdout.clearLine();
+            process.stdout.cursorTo(0);
+            process.stdout.write(`Uploading: ${percent}%`);
+          }
+        }
+
         //start the transfer
         transfer.start();
 
-        transfer.oncomplete = function( transfer, time ) {
+        transfer.oncomplete = function( time ) {
+          //if the progress is show, display a new line
+          if (options.progress) 
+            process.stdout.write("\n")
+            
           if (!options.verbose) process.stdout.write("done.")
         }
         
@@ -190,5 +212,6 @@ function parseArgumentsIntoOptions(rawArgs) {
    verbose: args['--verbose'] || false,
    apikey: args['--apikey'],
    username: args['--username'],
+   progress: args['--progress'] || false,
  };
 }
