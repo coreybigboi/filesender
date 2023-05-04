@@ -9,7 +9,16 @@ const ini = require('ini') //used to parse the config file
 const home = process.env.HOME || process.env.USERPROFILE;
 
 //Get the API key and security token from ~/.filesender/filesender.py.ini
-const user_config_file = fs.readFileSync(home + '/.filesender/filesender.py.ini', 'utf8');
+try{
+  const user_config_file = fs.readFileSync(home + '/.filesender/filesender.py.ini', 'utf8');
+}
+catch(err){
+  console.log("Error: Could not find config file at " + home + '/.filesender/filesender.py.ini');
+  console.log("Please download it from your FileSender instance and place it there.");
+  //stop the program
+  process.exit(1);
+}
+
 
 const user_config = ini.parse(user_config_file);
 const base_url = user_config['system']['base_url'].split('/').slice(0, -1).join('/');
