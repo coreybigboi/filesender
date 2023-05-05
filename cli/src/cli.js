@@ -139,6 +139,7 @@ function parseArgumentsIntoOptions(rawArgs) {
      '-a': '--apikey',
      '-r': '--recipients',
      '-f': '--file',
+     '-d': '--daysValid',
    },
    {
      argv: rawArgs.slice(2),
