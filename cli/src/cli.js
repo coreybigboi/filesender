@@ -9,8 +9,9 @@ const ini = require('ini') //used to parse the config file
 const home = process.env.HOME || process.env.USERPROFILE;
 
 //Get the API key and security token from ~/.filesender/filesender.py.ini
+var user_config_file;
 try{
-  const user_config_file = fs.readFileSync(home + '/.filesender/filesender.py.ini', 'utf8');
+  user_config_file = fs.readFileSync(home + '/.filesender/filesender.py.ini', 'utf8');
 }
 catch(err){
   console.log("Error: Could not find config file at " + home + '/.filesender/filesender.py.ini');
@@ -43,7 +44,7 @@ export function cli(args) {
   let options = parseArgumentsIntoOptions(args);
 
 
-  
+
   
   if (options.verbose) console.log("Downloading config...");
 
