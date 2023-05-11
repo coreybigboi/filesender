@@ -41,6 +41,21 @@ const file = fs.createWriteStream("filesender-config.js");
 
 export function cli(args) {
 
+  const method = args[2];
+  console.log("method: " + method)
+  if (method == "list-transfers") {
+    seeTransfers();
+    return;
+  }
+
+  if (method == "upload") {
+    upload(args.slice(3));
+    return
+  }
+}
+
+function upload(args) {
+
   let options = parseArgumentsIntoOptions(args);
 
 
