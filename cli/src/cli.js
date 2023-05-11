@@ -4,6 +4,8 @@ import { Blob } from 'buffer';
 const http = require('https'); //used to download the config file
 const fs = require('fs'); //used to save the config file
 const ini = require('ini') //used to parse the config file
+const FileReader = require('filereader') //used in the crypto_blob_reader.js
+global.FileReader = FileReader;
 
 //get the users home directory
 const home = process.env.HOME || process.env.USERPROFILE;
@@ -154,6 +156,9 @@ function upload(args) {
         require('../../www/js/client.js');
         require('../../www/js/filesender.js');
         require('../../www/js/transfer.js');
+        require('../../www/js/crypter/crypto_app.js');
+        require('../../www/js/crypter/crypto_blob_reader.js');
+        require('../../www/js/crypter/crypto_common.js');
 
         //add some required functions
         global.window.filesender.ui = {};
@@ -198,6 +203,7 @@ function upload(args) {
             var blob = new Blob([fs.readFileSync(options.files[i])]);
             //get the file name without the path, supports both unix and windows paths
             var filename = options.files[i].split('/').pop().split('\\').pop();
+            blob.name = filename;
             transfer.addFile(filename, blob, errorHandler);
         }
 
@@ -340,8 +346,7 @@ function parseArgumentsIntoOptions(rawArgs) {
      '--apikey': String,
      '--recipients': [ String ],
      '--file': [ String ],
-     '--daysValid' : [ Number],
-     '--seeTransfers' : Boolean,
+     '--encryption': String,
      '-v': '--verbose',
      '-p': '--progress',
      '-i': '--insecure',
@@ -350,7 +355,8 @@ function parseArgumentsIntoOptions(rawArgs) {
      '-u': '--username',
      '-a': '--apikey',
      '-r': '--recipients',
-     '-f': '--file'
+     '-f': '--file',
+     '-e': '--encryption',
    },
    {
      argv: rawArgs.slice(3),
@@ -365,10 +371,6 @@ function parseArgumentsIntoOptions(rawArgs) {
    files : args['--file'] || [],
    message : args['--message'] || "",
    subject : args['--subject'] || "",
-   daysValid : args['--daysValid'],
-   verbose: args['--verbose'] || false,
-   apikey: args['--apikey'],
-   username: args['--username'],
-   progress: args['--progress'] || false
+   encryption : args['--encryption'] || null,
  };
 }

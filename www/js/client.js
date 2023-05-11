@@ -144,7 +144,13 @@ window.filesender.client = {
                     to_sign += '&' + data;
                 } else {
                     // Await the return value - because outer function is now ASYNC
-                    let buf = await data.arrayBuffer();
+                    let buf = data;
+
+                    if (data instanceof Blob)
+                        buf = await data.arrayBuffer();
+
+                    
+
                     data = new Uint8Array(buf);
 
                     let enc = new TextEncoder();
@@ -502,12 +508,19 @@ window.filesender.client = {
         var $this = this;
         if(encrypted){
             var cryptedBlob = null;
-            blobReader = window.filesender.crypto_blob_reader().createReader(blob, function(blob){
-                // nothing todo here.. 
-            });
-            blobReader.blobSlice = blob;
+            //blob.name = file.name;
+            //blobReader = window.filesender.crypto_blob_reader().createReader(blob, function(blob){
+            //    // nothing todo here.. 
+            //});
+            //
+            //blobReader.blobSlice = blob;
+            //
+            //blobReader.readArrayBuffer(function(arrayBuffer){
 
-            blobReader.readArrayBuffer(function(arrayBuffer){
+            //convert blob to arraybuffer
+            blob.arrayBuffer().then(function(arrayBuffer) {
+            
+
                 window.filesender.crypto_app().encryptBlob(
                     arrayBuffer,
                     chunkid,
