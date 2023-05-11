@@ -54,6 +54,12 @@ export function cli(args) {
   }
 }
 
+/*
+ * Uploads a file to the FileSender instance
+ * @param {string[]} args - command line arguments
+ * 
+ * This is for the upload command and runs when the user runs 'filesender upload'
+ */
 function upload(args) {
 
   let options = parseArgumentsIntoOptions(args);
@@ -91,9 +97,6 @@ function upload(args) {
   if (options.verbose) options.progress = false;
 
   if (!options.verbose) process.stdout.write("Getting config...")
-
-  
-
 
 
   const request = http.get(base_url+"/filesender-config.js.php", function(response) {
@@ -280,7 +283,13 @@ function call(method, resource, callback){
   }
 }
 
-
+/*
+ * Parses the command line arguments
+ * @param {string[]} rawArgs - command line arguments
+ * @returns {Object} - parsed arguments
+ * 
+ * This is for the upload command
+ */
 function parseArgumentsIntoOptions(rawArgs) {
  const args = arg(
    {
