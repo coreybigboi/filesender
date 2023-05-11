@@ -96,7 +96,7 @@ function upload(args) {
 
 
 
-const request = http.get(base_url+"/filesender-config.js.php", function(response) {
+  const request = http.get(base_url+"/filesender-config.js.php", function(response) {
    response.pipe(file);
 
    // after download completed close filestream
@@ -204,9 +204,8 @@ const request = http.get(base_url+"/filesender-config.js.php", function(response
           if (!options.verbose) process.stdout.write("done.")
         }
         
-   });
-});
-
+    });
+  });
 }
 
 /**
