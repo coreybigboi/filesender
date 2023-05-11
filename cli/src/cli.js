@@ -24,8 +24,8 @@ catch(err){
 const user_config = ini.parse(user_config_file);
 const base_url = user_config['system']['base_url'].split('/').slice(0, -1).join('/');
 const default_transfer_days_valid = user_config['system']['default_transfer_days_valid'];
-const username = user_config['user']['username'];
-const apikey = user_config['user']['apikey'];
+var username = user_config['user']['username'];
+var apikey = user_config['user']['apikey'];
 
 const { JSDOM } = require( "jsdom" );
 const { window } = new JSDOM( "", {url: base_url + "/?s=upload"} );
@@ -63,13 +63,6 @@ export function cli(args) {
 function upload(args) {
 
   let options = parseArgumentsIntoOptions(args);
-
-
-  // view list of transfers
-  if (options.seeTransfers === true) {
-    seeTransfers();
-    return;
-  }
   
   if (options.verbose) console.log("Downloading config...");
 
@@ -312,8 +305,7 @@ function parseArgumentsIntoOptions(rawArgs) {
      '-u': '--username',
      '-a': '--apikey',
      '-r': '--recipients',
-     '-f': '--file',
-     '-s': '--seeTransfers'
+     '-f': '--file'
    },
    {
      argv: rawArgs.slice(3),
@@ -332,7 +324,6 @@ function parseArgumentsIntoOptions(rawArgs) {
    verbose: args['--verbose'] || false,
    apikey: args['--apikey'],
    username: args['--username'],
-   progress: args['--progress'] || false,
-   seeTransfers: args['--seeTransfers'] || false,
+   progress: args['--progress'] || false
  };
 }
