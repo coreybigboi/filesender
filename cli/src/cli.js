@@ -44,7 +44,11 @@ export function cli(args) {
   let options = parseArgumentsIntoOptions(args);
 
 
-
+  // view list of transfers
+  if (options.seeTransfers === true) {
+    seeTransfers();
+    return;
+  }
   
   if (options.verbose) console.log("Downloading config...");
 
@@ -73,17 +77,8 @@ export function cli(args) {
 
   if (!options.verbose) process.stdout.write("Getting config...")
 
-  // view list of transfers
-  if (options.seeTransfers === true) {
-    seeTransfers();
-    return;
-  }
+  
 
-  // view list of transfers
-  if (options.seeTransfers === true) {
-    seeTransfers();
-    return;
-  }
 
 
 const request = http.get(base_url+"/filesender-config.js.php", function(response) {
