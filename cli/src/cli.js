@@ -217,6 +217,13 @@ function upload(args) {
 
         //add message
         transfer.message = options.message;
+
+        //set the encryption
+        if (options.encryption != null) {
+          transfer.encryption = true;
+          transfer.encryption_password = options.encryption;
+        }
+
     
         // set the expiry date to the daysValid argument if exists, otherwise use default value in config file
         let daysValid = options.daysValid ? options.daysValid : default_transfer_days_valid
