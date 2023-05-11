@@ -59,13 +59,13 @@ export function cli(args) {
   }
 
   if (method == "download") {
-    download(args);
+    download(args[3]);
     return
   }
 
 }
 
-function download(transfer_id, callback) {
+function download(transfer_id) {
 
 }
 
