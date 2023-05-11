@@ -49,7 +49,7 @@ export function cli(args) {
   }
 
   if (method == "upload") {
-    upload(args.slice(3));
+    upload(args);
     return
   }
 }
@@ -308,7 +308,7 @@ function parseArgumentsIntoOptions(rawArgs) {
      '-s': '--seeTransfers'
    },
    {
-     argv: rawArgs.slice(2),
+     argv: rawArgs.slice(3),
    }
  );
  return {
