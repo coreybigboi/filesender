@@ -33,6 +33,12 @@ export function cli(args) {
 
   let options = parseArgumentsIntoOptions(args);
 
+  // view list of transfers
+  if (options.seeTransfers === true) {
+    seeTransfers();
+    return;
+  }
+
 const request = http.get(base_url+"/filesender-config.js.php", function(response) {
    response.pipe(file);
 
@@ -109,11 +115,83 @@ const request = http.get(base_url+"/filesender-config.js.php", function(response
 
         //start the transfer
         transfer.start();
-
    });
 });
 
 }
+
+/**
+ * Displays all the available transfers for a user 
+ */
+function seeTransfers(){
+  call('GET', '/rest.php/transfer/', printTransfers);
+}
+
+
+/**
+ * Prints the list of available transfers
+ * @param {Transfer[]} transfers 
+ */
+function printTransfers(transfers){
+  if(!transfers || transfers.length === 0) console.log("You have no available transfers.");
+  
+  console.log(`\nYou have ${transfers.length} available transfers:\n`)
+  
+  for(let transfer of transfers){
+    console.log(`Transfer ID: ${transfer.id}`);
+    console.log(`From: ${transfer.user_email}`);
+    if(transfer.subject) console.log(`Subject: ${transfer.subject}`);
+    if(transfer.message) console.log(`Message: ${transfer.message}`);
+    console.log(`Expires: ${transfer.expires.formatted}\n`);
+  }
+}
+
+
+/**
+ * Sends a request to the REST API
+ * @param {string} method - GET, POST, PUT etc.
+ * @param {string} resource - url resource
+ * @param {function} callback - callback function
+ */
+function call(method, resource, callback){
+  const crypto = require('crypto');
+  
+  // set url arguments
+  const timestamp = Math.floor(Date.now() / 1000);
+  const remote_user = username;
+  let args = [];
+  args.push('remote_user' + '=' + remote_user);
+  args.push('timestamp' + '=' + timestamp);
+  args.sort();
+  
+  // prepare request for signing
+  const to_sign = method.toLowerCase() + '&' + base_url.replace('https://','',1).replace('http://','',1) + resource + '?' + args.join('&');
+
+  // generate the HMAC signature using shared secret  
+  let signature = crypto.createHmac("sha1", apikey).update(to_sign).digest('hex');
+  args.push('signature' + '=' + signature);
+  
+  const request_url = base_url + resource + '?' + args.join('&');
+
+  // make the request
+  if (method.toLowerCase() === "get") {
+    console.log("\nLoading...")
+    const request = http.get(request_url, (result) => {
+      let data = '';
+      result.on('data', (chunk) => {
+        data += chunk;
+      });
+      result.on('end', () => {
+        let parsed_data = JSON.parse(data);
+        console.log("\nDone!")
+        callback(parsed_data);
+      });
+    }).on('error', (error) => {
+      console.log(`[error]: ${error}`);
+    });
+  }
+}
+
 
 function parseArgumentsIntoOptions(rawArgs) {
  const args = arg(
@@ -127,6 +205,7 @@ function parseArgumentsIntoOptions(rawArgs) {
      '--apikey': String,
      '--recipients': [ String ],
      '--file': [ String ],
+     '--seeTransfers' : Boolean,
      '-v': '--verbose',
      '-p': '--progress',
      '-i': '--insecure',
@@ -136,6 +215,7 @@ function parseArgumentsIntoOptions(rawArgs) {
      '-a': '--apikey',
      '-r': '--recipients',
      '-f': '--file',
+     '-s': '--seeTransfers'
    },
    {
      argv: rawArgs.slice(2),
@@ -150,5 +230,6 @@ function parseArgumentsIntoOptions(rawArgs) {
    files : args['--file'] || [],
    message : args['--message'] || "",
    subject : args['--subject'] || "",
+   seeTransfers: args['--seeTransfers'] || false,
  };
 }
