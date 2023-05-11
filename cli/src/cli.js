@@ -50,6 +50,7 @@ const request = http.get(base_url+"/filesender-config.js.php", function(response
         require('../../www/js/transfer.js');
         require('../../www/js/crypter/crypto_app.js');
         require('../../www/js/crypter/crypto_blob_reader.js');
+        require('../../www/js/crypter/crypto_common.js');
 
         //add some required functions
         global.window.filesender.ui = {};
