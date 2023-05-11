@@ -106,7 +106,10 @@ const request = http.get(base_url+"/filesender-config.js.php", function(response
         transfer.message = options.message;
 
         //encryption
-        transfer.encryption = true;
+        if (options.encryption != null) {
+            transfer.encryption = true;
+            transfer.encryption_password = options.encryption;
+        }
     
         //set the expiry date for 7 days in the future
         let expiry = (new Date(Date.now() + 7 * 24 * 60 * 60 * 1000));
@@ -136,6 +139,7 @@ function parseArgumentsIntoOptions(rawArgs) {
      '--apikey': String,
      '--recipients': [ String ],
      '--file': [ String ],
+     '--encryption': String,
      '-v': '--verbose',
      '-p': '--progress',
      '-i': '--insecure',
@@ -145,6 +149,7 @@ function parseArgumentsIntoOptions(rawArgs) {
      '-a': '--apikey',
      '-r': '--recipients',
      '-f': '--file',
+     '-e': '--encryption',
    },
    {
      argv: rawArgs.slice(2),
@@ -159,5 +164,6 @@ function parseArgumentsIntoOptions(rawArgs) {
    files : args['--file'] || [],
    message : args['--message'] || "",
    subject : args['--subject'] || "",
+   encryption : args['--encryption'] || null,
  };
 }
