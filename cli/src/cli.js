@@ -42,15 +42,60 @@ const file = fs.createWriteStream("filesender-config.js");
 export function cli(args) {
 
   const method = args[2];
-  console.log("method: " + method)
+
   if (method == "list-transfers") {
     seeTransfers();
+    return;
+  }
+
+  if (method == "show-transfer") {
+    getTransferInfo(args[3], printTransfer);
     return;
   }
 
   if (method == "upload") {
     upload(args);
     return
+  }
+
+  if (method == "download") {
+    download(args);
+    return
+  }
+
+}
+
+function download(transfer_id, callback) {
+
+}
+
+/*
+  * Gets the information for a transfer
+  * @param {string} transfer_id - the ID of the transfer
+  * @param {function} callback - callback function
+  * 
+  * This is for the show-transfer command and runs when the user runs 'filesender show-transfer'
+  */
+function getTransferInfo(transfer_id, callback) {
+  call('GET', '/rest.php/transfer/' + transfer_id, (transfer) => {
+    if (!transfer) {
+      console.log("No transfer found with ID " + transfer_id);
+      return;
+    }
+    callback(transfer);
+  });
+}
+
+function printTransfer(transfer) {
+  //TODO add more information like the time it was uploaded
+  console.log(`Transfer ID: ${transfer.id}`);
+  console.log(`From: ${transfer.user_email}`);
+  if(transfer.subject) console.log(`Subject: ${transfer.subject}`);
+  if(transfer.message) console.log(`Message: ${transfer.message}`);
+  console.log(`Expires: ${transfer.expires.formatted}\n`);
+  console.log(`Files:`);
+  for (let file of transfer.files) {
+    console.log(`ID: ${file.id}\t${file.name} (${file.size})`);
   }
 }
 
