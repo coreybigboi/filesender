@@ -4,8 +4,6 @@ import { Blob } from 'buffer';
 const http = require('https'); //used to download the config file
 const fs = require('fs'); //used to save the config file
 const ini = require('ini') //used to parse the config file
-const FileReader = require('filereader') //used in the crypto_blob_reader.js
-global.FileReader = FileReader;
 
 //get the users home directory
 const home = process.env.HOME || process.env.USERPROFILE;
