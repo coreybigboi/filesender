@@ -82,12 +82,9 @@ function download(transfer_id) {
  */
 function deleteTransfer(transfer_id) {
   call('DELETE', `/rest.php/transfer/${transfer_id}`, (result) => {
-    if (result == true) {
-      console.log(`Transfer with ID ${transfer_id} successfully deleted`);
-    }
-    else {
-      console.log(`Error: Transfer with ID ${transfer_id} could not be deleted`);
-    }
+    //console.log(result);
+    //if (result == true) console.log(`Transfer with ID ${transfer_id} successfully deleted`);
+    //else console.log(`Transfer with ID ${transfer_id} could not be deleted`);
   });
 }
 
@@ -300,7 +297,7 @@ function printTransfers(transfers){
     return;
   }
   
-  console.log(`\nYou have ${transfers.length} available transfers:\n`)
+  console.log(`\nYou have ${transfers.length} available transfer${transfers.length > 1 ? 's' : ''}:\n`)
   
   for(let transfer of transfers){
     console.log(`Transfer ID: ${transfer.id}`);
@@ -348,7 +345,7 @@ function call(method, resource, callback){
     method: method.toUpperCase()
   };
 
-  console.log("\nLoading...")
+  process.stdout.write("loading...")
 
   const request = http.request(options, (result) => {
     let data = '';
@@ -357,7 +354,7 @@ function call(method, resource, callback){
     });
     result.on('end', () => {
       let parsed_data = JSON.parse(data);
-      console.log("\nDone!\n")
+      process.stdout.write("done.\n")
       callback(parsed_data);
     });
   }).on('error', (error) => {
@@ -387,6 +384,7 @@ function parseArgumentsIntoOptions(rawArgs) {
      '--recipients': [ String ],
      '--file': [ String ],
      '--encryption': String,
+     '--daysValid' : [ Number],
      '-v': '--verbose',
      '-p': '--progress',
      '-i': '--insecure',
@@ -397,6 +395,7 @@ function parseArgumentsIntoOptions(rawArgs) {
      '-r': '--recipients',
      '-f': '--file',
      '-e': '--encryption',
+     '-d': '--daysValid',
    },
    {
      argv: rawArgs.slice(3),
@@ -412,5 +411,6 @@ function parseArgumentsIntoOptions(rawArgs) {
    message : args['--message'] || "",
    subject : args['--subject'] || "",
    encryption : args['--encryption'] || null,
+   daysValid : args['--daysValid'],
  };
 }
