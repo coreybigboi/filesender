@@ -55,18 +55,40 @@ export function cli(args) {
 
   if (method == "upload") {
     upload(args);
-    return
+    return;
   }
 
   if (method == "download") {
     download(args[3]);
-    return
+    return;
+  }
+
+  if(method === "delete"){
+    deleteTransfer(args[3]);
+    return;
   }
 
 }
 
 function download(transfer_id) {
+  //TODO
+}
 
+/**
+ * Deletes a specific transfer
+ * @param {int} transfer_id 
+ * 
+ * This is for the delete command and runs when user runs 'filesender delete {id}'
+ */
+function deleteTransfer(transfer_id) {
+  call('DELETE', `/rest.php/transfer/${transfer_id}`, (result) => {
+    if (result == true) {
+      console.log(`Transfer with ID ${transfer_id} successfully deleted`);
+    }
+    else {
+      console.log(`Error: Transfer with ID ${transfer_id} could not be deleted`);
+    }
+  });
 }
 
 /*
@@ -273,7 +295,10 @@ function seeTransfers(){
  * @param {Transfer[]} transfers 
  */
 function printTransfers(transfers){
-  if(!transfers || transfers.length === 0) console.log("You have no available transfers.");
+  if(!transfers || transfers.length === 0){ 
+    console.log("You have no available transfers.");
+    return;
+  }
   
   console.log(`\nYou have ${transfers.length} available transfers:\n`)
   
@@ -295,7 +320,7 @@ function printTransfers(transfers){
  */
 function call(method, resource, callback){
   const crypto = require('crypto');
-  
+
   // set url arguments
   const timestamp = Math.floor(Date.now() / 1000);
   const remote_user = username;
@@ -313,24 +338,34 @@ function call(method, resource, callback){
   
   const request_url = base_url + resource + '?' + args.join('&');
 
-  // make the request
-  if (method.toLowerCase() === "get") {
-    console.log("\nLoading...")
-    const request = http.get(request_url, (result) => {
-      let data = '';
-      result.on('data', (chunk) => {
-        data += chunk;
-      });
-      result.on('end', () => {
-        let parsed_data = JSON.parse(data);
-        console.log("\nDone!")
-        callback(parsed_data);
-      });
-    }).on('error', (error) => {
-      console.log(`[error]: ${error}`);
+  const hostname = base_url.replace('https://','',1).replace('http://','',1);
+  const path = resource + "?" + args.join('&')
+
+
+  const options = {
+    hostname: hostname,
+    path: path,
+    method: method.toUpperCase()
+  };
+
+  console.log("\nLoading...")
+
+  const request = http.request(options, (result) => {
+    let data = '';
+    result.on('data', (chunk) => {
+      data += chunk;
     });
-  }
+    result.on('end', () => {
+      let parsed_data = JSON.parse(data);
+      console.log("\nDone!\n")
+      callback(parsed_data);
+    });
+  }).on('error', (error) => {
+    console.log(`[error]: ${error}`);
+  });
+  request.end()
 }
+
 
 /*
  * Parses the command line arguments
