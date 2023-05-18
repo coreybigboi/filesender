@@ -4,6 +4,7 @@ import { Blob } from 'buffer';
 const http = require('https'); //used to download the config file
 const fs = require('fs'); //used to save the config file
 const ini = require('ini') //used to parse the config file
+const beautify = require('js-beautify').js //used to format the config file
 
 //get the users home directory
 const home = process.env.HOME || process.env.USERPROFILE;
@@ -33,10 +34,6 @@ global.$ = global.jQuery = require( "jquery" )( window );
 
 // Set up the global window object
 global.window = global;
-
-//get the config file
-
-const file = fs.createWriteStream("filesender-config.js");
 
 
 export function cli(args) {
@@ -164,6 +161,46 @@ function printTransfer(transfer) {
   }
 }
 
+
+
+/*
+  * Converts the config file from a js file to a json file
+  * We do this because we don't want to execute the config file, we just want to read it
+  * This is a safety measure to make sure the config file doesn't do anything malicious
+  * @param {string} config - the config file as a string
+  * @returns {string} - the config file as a json string
+  */
+function configFileToJSON(config) {
+  //format the config to good js
+  config = beautify(config, { indent_size: 2, space_in_empty_paren: true });
+
+  //alter the config file to become json
+  //remove the first 6 lines
+  config = config.split('\n').slice(6).join('\n');
+  //remove the last 3 lines
+  config = config.split('\n').slice(0, -3).join('\n');
+
+  //remove the /**/ comment
+  config = config.replace(/\/\*\*\/\n/g, "");
+
+  //add back the opening and closing brackets
+  config = "{\n" + config + "\n}";
+
+  //replace any ' with " to make it valid json
+  config = config.replace(/'/g, '"');
+
+  //surround the config with quotes
+  //any text that is like name: value becomes "name" : "value"
+  config = config.replace(/  ([a-zA-Z0-9_]+): /g, '  "$1": ');
+
+  //make sure there are no trailing commas
+  config = config.replace(/,(\s*})/g, '$1');
+
+  return config;
+}
+
+
+
 /*
  * Uploads a file to the FileSender instance
  * @param {string[]} args - command line arguments
@@ -203,11 +240,21 @@ function upload(args) {
 
 
   const request = http.get(base_url+"/filesender-config.js.php", function(response) {
-   response.pipe(file);
 
-   // after download completed close filestream
-   file.on("finish", () => {
-        file.close();
+    //load the config file as a string
+    var config = "";
+    response.on('data', function(chunk) {
+      config += chunk;
+    });
+
+    //after the config file has been downloaded
+    response.on('end', function() {
+      global.window.filesender = {};
+
+      //convert the config file to json for safety
+      global.window.filesender.config = JSON.parse(configFileToJSON(config));
+
+        
         if (options.verbose) console.log("Config downloaded");
         if (!options.verbose) process.stdout.write("uploading...")
 
@@ -215,7 +262,6 @@ function upload(args) {
         if (options.progress) process.stdout.write("\n");
 
         ////get all the required files
-        require('../filesender-config.js');
         require('../../www/js/client.js');
         require('../../www/js/filesender.js');
         require('../../www/js/transfer.js');
