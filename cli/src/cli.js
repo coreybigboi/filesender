@@ -68,6 +68,10 @@ export function cli(args) {
     return;
   }
 
+  //TODO: add help command
+  //TODO: add command not found message
+
+
 }
 
 
