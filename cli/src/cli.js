@@ -21,6 +21,7 @@ catch(err){
   process.exit(1);
 }
 
+//TODO: get terasender working
 
 const user_config = ini.parse(user_config_file);
 const base_url = user_config['system']['base_url'].split('/').slice(0, -1).join('/');
