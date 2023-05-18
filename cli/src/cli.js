@@ -70,8 +70,50 @@ export function cli(args) {
 
 }
 
+
+/**
+ * Downloads a transfer
+ * @param {int} transfer_id - the ID of the transfer
+ * 
+ * This is for the download command and runs when the user runs 'filesender download {id}'
+ * 
+ * TODO: add support for downloading encrypted transfers
+ */
 function download(transfer_id) {
-  //TODO
+  //Get the details of the transfer
+  getTransferInfo(transfer_id, (transfer) => {
+    console.log(`Downloading transfer with ID ${transfer_id}...`);
+    //get a token for the download
+    var token = transfer.recipients[0].token;
+    //get a list of the file IDs
+    var file_ids = [];
+    for (let file of transfer.files) {
+      file_ids.push(file.id);
+    }
+
+    //arrange the url like: https://filesender.aarnet.edu.au/download.php?token=55afdd70-1f93-4b2a-8ac4-e926b936d205&files_ids=19157858%2C19157863
+    var url = `${base_url}/download.php?token=${token}&files_ids=${file_ids.join('%2C')}`;
+
+    //get the file name
+    var filename = transfer.files[0].name;
+
+    //if there are multiple files, the download will be a zip file, so name it accordingly
+    if (transfer.files.length > 1) filename = `transfer_${transfer_id}.zip`;
+
+    //create a write stream to save the file
+    var file = fs.createWriteStream(filename);
+
+    //download the file
+    const request = http.get(url, function(response) {
+      response.pipe(file);
+      // after download completed close filestream
+      file.on("finish", () => {
+        file.close();
+        console.log("Download complete");
+      });
+    });
+    
+  });
 }
 
 /**
