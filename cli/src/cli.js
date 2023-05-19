@@ -71,6 +71,7 @@ export function cli(args) {
     return
   }
 
+  console.log("Incorrect usage. Use \'node filesender-cli help\' for help menu")
 }
 
 
