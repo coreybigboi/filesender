@@ -66,7 +66,54 @@ export function cli(args) {
     return;
   }
 
+  if(method === "-h" || method === "help"){
+    printHelp();
+    return
+  }
+
   //TODO: add help command
+  /**
+   * Prints a help message for using the cli
+   */
+  function printHelp(){
+    console.log("\nWelcome to the Filesender CLI!\n");
+    console.log("Usage: filesender-cli [command] [options]");
+    console.log("");
+    console.log("Commands:")
+    console.log("list-transfers        Lists basic details for the currently available transfers");
+    console.log("show-transfer         Shows the full details of a specific transfer");
+    console.log("upload                Create a new transfer for a recipient");
+    console.log("download              Download the files for a transfer");
+    console.log("delete                Delete a transfer");
+    console.log("");
+    console.log("Options:");
+    console.log("-h, --help            Show this help message");
+    console.log("-v, --verbose         Show detailed log messages");
+    console.log("-i, --insecure        ");
+    console.log("-p, --progress        ");
+    console.log("-s, --subject         Subject line for the transfer")
+    console.log("-m, --message         Message to add to transfer");
+    console.log("-u, --username        Your unique username for filesender if not using config file");
+    console.log("-a, --apikey          Your secret API key if not using config file");
+    console.log("-r, --recipients      List of recipients (can be only 1) to include in a transfer");
+    console.log("-f, --file            List of files (can be only 1) to include in a transfer");
+    console.log("-e, --encryption      Passphrase to use for encryption / decryption");
+    console.log("-d, --daysValid       Number of days that the transfer will be available for"); 
+    console.log("");
+    console.log("Examples:");
+    console.log("filesender-cli print-transfers                                                                  Prints all of your available transfers");
+    console.log("filesender-cli upload -u username -a 12345678 -r example@example.com -f file.txt -d 21          Creates a transfer for recipient example@example.com with file.txt that is valid for 21 days.")          
+    console.log("");
+    console.log("Please use the --help flag with a command to get detailed information for its usage")
+  }
+
+  /**
+   * Help message for print transfers command
+   */
+  function helpListTransfers(){
+    
+  }
+
   //TODO: add command not found message
 
 
