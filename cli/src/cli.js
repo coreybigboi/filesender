@@ -76,35 +76,46 @@ export function cli(args) {
    * Prints a help message for using the cli
    */
   function printHelp(){
-    console.log("\nWelcome to the Filesender CLI!\n");
-    console.log("Usage: filesender-cli [command] [options]");
+    // Reset styles
+    const reset = "\x1b[0m";
+
+    // Text color
+    const greyedOut = "\x1b[90m";
+    const green = "\x1b[32m";
+    const yellow = "\x1b[33m";
+    const blue = "\x1b[34m";
+
+
+    console.log(`\n${green}Welcome${reset} to the ${blue}Filesender CLI${reset}!\n`);
+    console.log(`${yellow}Usage:${reset} filesender-cli [command] [options]`);
     console.log("");
-    console.log("Commands:")
-    console.log("list-transfers        Lists basic details for the currently available transfers");
-    console.log("show-transfer         Shows the full details of a specific transfer");
-    console.log("upload                Create a new transfer for a recipient");
-    console.log("download              Download the files for a transfer");
-    console.log("delete                Delete a transfer");
+    console.log(`${yellow}Commands:${reset}`)
+    console.log(`list-transfers        ${blue}Lists basic details for the currently available transfers${reset}`);
+    console.log(`show-transfer         ${blue}Shows the full details of a specific transfer${reset}`);
+    console.log(`upload                ${blue}Create a new transfer for a recipient${reset}`);
+    console.log(`download              ${blue}Download the files of a transfer${reset}`);
+    console.log(`delete                ${blue}Delete a transfer${reset}`);
     console.log("");
-    console.log("Options:");
-    console.log("-h, --help            Show this help message");
-    console.log("-v, --verbose         Show detailed log messages");
-    console.log("-i, --insecure        ");
-    console.log("-p, --progress        ");
-    console.log("-s, --subject         Subject line for the transfer")
-    console.log("-m, --message         Message to add to transfer");
-    console.log("-u, --username        Your unique username for filesender if not using config file");
-    console.log("-a, --apikey          Your secret API key if not using config file");
-    console.log("-r, --recipients      List of recipients (can be only 1) to include in a transfer");
-    console.log("-f, --file            List of files (can be only 1) to include in a transfer");
-    console.log("-e, --encryption      Passphrase to use for encryption / decryption");
-    console.log("-d, --daysValid       Number of days that the transfer will be available for"); 
+    console.log(`${yellow}Options:${reset}`);
+    console.log(`-h, ${greyedOut}--help${reset}             ${blue}Show this help message${reset}`);
+    console.log(`-v, ${greyedOut}--verbose${reset}          ${blue}Show detailed log messages${reset}`);
+    console.log(`-i, ${greyedOut}--insecure${reset}         `);
+    console.log(`-p, ${greyedOut}--progress${reset}         `);
+    console.log(`-s, ${greyedOut}--subject${reset}          ${blue}Subject line for the transfer${reset}`)
+    console.log(`-m, ${greyedOut}--message${reset}          ${blue}Message to add to the transfer${reset}`);
+    console.log(`-u, ${greyedOut}--username${reset}         ${blue}Your unique username for filesender if not using config file${reset}`);
+    console.log(`-a, ${greyedOut}--apikey${reset}           ${blue}Your secret API key if not using config file${reset}`);
+    console.log(`-r, ${greyedOut}--recipients${reset}       ${blue}Recipient(s) to include in a transfer${reset}`);
+    console.log(`-f, ${greyedOut}--file${reset}             ${blue}File(s) to include in a transfer${reset}`);
+    console.log(`-e, ${greyedOut}--encryption${reset}       ${blue}Passphrase to use for encryption / decryption${reset}`);
+    console.log(`-d, ${greyedOut}--daysValid${reset}        ${blue}Number of days that the transfer will be available for${reset}`); 
     console.log("");
-    console.log("Examples:");
-    console.log("filesender-cli print-transfers                                                                  Prints all of your available transfers");
-    console.log("filesender-cli upload -u username -a 12345678 -r example@example.com -f file.txt -d 21          Creates a transfer for recipient example@example.com with file.txt that is valid for 21 days.")          
+    console.log(`${yellow}Examples:${reset}`);
+    console.log(`filesender-cli print-transfers                                                                  ${blue}Prints all of your available transfers${reset}`);
+    console.log(`filesender-cli upload -u username -a 12345678 -r example@example.com -f file.txt -d 21          ${blue}Creates a transfer for recipient example@example.com with file.txt that is valid for 21 days.${reset}`)          
     console.log("");
-    console.log("Please use the --help flag with a command to get detailed information for its usage")
+    console.log(`${green}Please use the ${reset}--help ${green}flag with a command to get detailed information for its usage${reset}`)
+    console.log("");
   }
 
   /**
