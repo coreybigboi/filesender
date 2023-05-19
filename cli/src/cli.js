@@ -66,7 +66,7 @@ export function cli(args) {
     return;
   }
 
-  if(method === "-h" || method === "help"){
+  if(method === "help"){
     printHelp();
     return
   }
@@ -95,12 +95,10 @@ export function cli(args) {
     console.log(`upload                ${blue}Create a new transfer for a recipient${reset}`);
     console.log(`download              ${blue}Download the files of a transfer${reset}`);
     console.log(`delete                ${blue}Delete a transfer${reset}`);
+    console.log(`help                  ${blue}Show this help message${reset}`);
     console.log("");
     console.log(`${yellow}Options:${reset}`);
-    console.log(`-h, ${greyedOut}--help${reset}             ${blue}Show this help message${reset}`);
     console.log(`-v, ${greyedOut}--verbose${reset}          ${blue}Show detailed log messages${reset}`);
-    console.log(`-i, ${greyedOut}--insecure${reset}         `);
-    console.log(`-p, ${greyedOut}--progress${reset}         `);
     console.log(`-s, ${greyedOut}--subject${reset}          ${blue}Subject line for the transfer${reset}`)
     console.log(`-m, ${greyedOut}--message${reset}          ${blue}Message to add to the transfer${reset}`);
     console.log(`-u, ${greyedOut}--username${reset}         ${blue}Your unique username for filesender if not using config file${reset}`);
@@ -114,7 +112,7 @@ export function cli(args) {
     console.log(`filesender-cli print-transfers                                                                  ${blue}Prints all of your available transfers${reset}`);
     console.log(`filesender-cli upload -u username -a 12345678 -r example@example.com -f file.txt -d 21          ${blue}Creates a transfer for recipient example@example.com with file.txt that is valid for 21 days.${reset}`)          
     console.log("");
-    console.log(`${green}Please use the ${reset}--help ${green}flag with a command to get detailed information for its usage${reset}`)
+    console.log(`${green}Please use ${reset}\'filesender-cli help command\'${green} to get detailed information for a specific command's usage${reset}`)
     console.log("");
   }
 
@@ -536,6 +534,7 @@ function parseArgumentsIntoOptions(rawArgs) {
      '--file': [ String ],
      '--encryption': String,
      '--daysValid' : [ Number],
+     '--help': Boolean,
      '-v': '--verbose',
      '-p': '--progress',
      '-i': '--insecure',
@@ -547,6 +546,7 @@ function parseArgumentsIntoOptions(rawArgs) {
      '-f': '--file',
      '-e': '--encryption',
      '-d': '--daysValid',
+     '-h': '--help',
    },
    {
      argv: rawArgs.slice(3),
@@ -563,5 +563,6 @@ function parseArgumentsIntoOptions(rawArgs) {
    subject : args['--subject'] || "",
    encryption : args['--encryption'] || null,
    daysValid : args['--daysValid'],
+   help: args['--help'] || false,
  };
 }
