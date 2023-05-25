@@ -332,6 +332,17 @@ function upload(args) {
             transfer.addFile(filename, blob, errorHandler);
         }
 
+        
+        //if the total size of the files is greater than 1 chunk size, they show progress
+        var totalSize = 0;
+        for (var i = 0; i < transfer.files.length; i++) {
+            totalSize += transfer.files[i].size;
+        }
+        if (totalSize > global.window.filesender.config.upload_chunk_size) {
+          options.progress = true;
+          process.stdout.write("\n");
+        }
+
         //add the recipients
         for (var i = 0; i < options.recipients.length; i++) {
             transfer.addRecipient(options.recipients[i], undefined);
@@ -359,6 +370,8 @@ function upload(args) {
 
         //set the security token
         //global.window.filesender.client.authentication_required = true;
+
+        //TODO: Get progress to work nicely with multiple files
 
         //if the user wants to see the progress (--progress) then show it
         transfer.onprogress = function( file , done) {
