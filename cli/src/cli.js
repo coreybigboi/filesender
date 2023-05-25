@@ -381,6 +381,8 @@ function upload(args) {
             process.stdout.write("\n")
             
           if (!options.verbose) process.stdout.write("done.")
+
+          console.log(`\nTransfer complete. Transfer ID: ${transfer.id}`)
         }
         
     });
