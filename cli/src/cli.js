@@ -84,6 +84,19 @@ export function cli(args) {
  * TODO: add support for downloading encrypted transfers
  */
 function download(transfer_id) {
+
+  //if the transfer ID is "latest", get the latest transfer
+  if (transfer_id == "latest") {
+    //get the list of transfers
+    call('GET', '/rest.php/transfer', (transfers) => {
+      //get the latest transfer
+      var latest_transfer = transfers[0];
+      //download it
+      download(latest_transfer.id);
+    });
+    return;
+  }
+
   //Get the details of the transfer
   getTransferInfo(transfer_id, (transfer) => {
     console.log(`Downloading transfer with ID ${transfer_id}...`);
