@@ -1,5 +1,6 @@
 import arg from 'arg';// Command line interface to be run through node.js
 import { Blob } from 'buffer';
+import { handleHelp } from './help.js';
 
 const http = require('https'); //used to download the config file
 const fs = require('fs'); //used to save the config file
@@ -43,7 +44,6 @@ export function cli(args) {
 
   if (method == "list-transfers") {
     seeTransfers();
-    return;
   }
 
   if (method == "show-transfer") {
@@ -66,10 +66,12 @@ export function cli(args) {
     return;
   }
 
-  //TODO: add help command
-  //TODO: add command not found message
+  if(method === "help"){
+    handleHelp(args);
+    return
+  }
 
-
+  console.log("Incorrect usage. Use \'node filesender-cli help\' for help menu")
 }
 
 
@@ -478,6 +480,7 @@ function parseArgumentsIntoOptions(rawArgs) {
      '--file': [ String ],
      '--encryption': String,
      '--daysValid' : [ Number],
+     '--help': Boolean,
      '-v': '--verbose',
      '-p': '--progress',
      '-i': '--insecure',
@@ -489,6 +492,7 @@ function parseArgumentsIntoOptions(rawArgs) {
      '-f': '--file',
      '-e': '--encryption',
      '-d': '--daysValid',
+     '-h': '--help',
    },
    {
      argv: rawArgs.slice(3),
@@ -505,5 +509,6 @@ function parseArgumentsIntoOptions(rawArgs) {
    subject : args['--subject'] || "",
    encryption : args['--encryption'] || null,
    daysValid : args['--daysValid'],
+   help: args['--help'] || false,
  };
 }
