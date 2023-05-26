@@ -43,7 +43,8 @@ export function cli(args) {
   const method = args[2];
 
   if (method == "list-transfers") {
-    seeTransfers();
+    ListAllAvailableTransfers();
+    return;
   }
 
   if (method == "show-transfer") {
@@ -62,7 +63,10 @@ export function cli(args) {
   }
 
   if(method === "delete"){
-    deleteTransfer(args[3]);
+    // determine whether delete all or specific id
+    const arg = args[3]
+    if(typeof arg === "string" && arg.toLowerCase() === "all") deleteAllTransfers()
+    else deleteTransfer(args[3]);
     return;
   }
 
@@ -74,6 +78,43 @@ export function cli(args) {
   console.log("Incorrect usage. Use \'node filesender-cli help\' for help menu")
 }
 
+
+//
+// Method: list-transfers
+//
+
+/**
+ * Displays all the available transfers for a user 
+ */
+function ListAllAvailableTransfers(){
+  call('GET', '/rest.php/transfer/', printTransfersFromArray);
+}
+
+
+/**
+ * Prints basic transfer details from an array of transfers
+ * @param {Transfer[]} transfers 
+ */
+function printTransfersFromArray(transfers){
+  if(!transfers || transfers.length === 0){ 
+    console.log("You have no available transfers.");
+    return;
+  }
+  
+  console.log(`\nYou have ${transfers.length} available transfer${transfers.length > 1 ? 's' : ''}:\n`)
+  
+  for(let transfer of transfers){
+    console.log(`Transfer ID: ${transfer.id}`);
+    console.log(`From: ${transfer.user_email}`);
+    if(transfer.subject) console.log(`Subject: ${transfer.subject}`);
+    if(transfer.message) console.log(`Message: ${transfer.message}`);
+    console.log(`Expires: ${transfer.expires.formatted}\n`);
+  }
+}
+
+//
+// Method: download
+//
 
 /**
  * Downloads a transfer
@@ -146,6 +187,24 @@ function deleteTransfer(transfer_id) {
     //else console.log(`Transfer with ID ${transfer_id} could not be deleted`);
   });
 }
+
+/**
+ * Called when user selects to delete all
+ */
+function deleteAllTransfers(){
+  call('GET', '/rest.php/transfer/', deleteAllTransfersFromArray);
+}
+
+/**
+ * Deletes all the transfers in the array
+ * @param {Transfer[]} transfers 
+ */
+function deleteAllTransfersFromArray(transfers){
+  for(let transfer of transfers){
+    deleteTransfer(transfer.id);
+  }
+}
+
 
 /*
   * Gets the information for a transfer
@@ -400,35 +459,6 @@ function upload(args) {
         
     });
   });
-}
-
-/**
- * Displays all the available transfers for a user 
- */
-function seeTransfers(){
-  call('GET', '/rest.php/transfer/', printTransfers);
-}
-
-
-/**
- * Prints the list of available transfers
- * @param {Transfer[]} transfers 
- */
-function printTransfers(transfers){
-  if(!transfers || transfers.length === 0){ 
-    console.log("You have no available transfers.");
-    return;
-  }
-  
-  console.log(`\nYou have ${transfers.length} available transfer${transfers.length > 1 ? 's' : ''}:\n`)
-  
-  for(let transfer of transfers){
-    console.log(`Transfer ID: ${transfer.id}`);
-    console.log(`From: ${transfer.user_email}`);
-    if(transfer.subject) console.log(`Subject: ${transfer.subject}`);
-    if(transfer.message) console.log(`Message: ${transfer.message}`);
-    console.log(`Expires: ${transfer.expires.formatted}\n`);
-  }
 }
 
 
