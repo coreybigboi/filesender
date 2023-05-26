@@ -65,8 +65,8 @@ export function cli(args) {
   if(method === "delete"){
     // determine whether delete all or specific id
     const arg = args[3]
-    if(typeof arg === "string" && arg.toLowerCase() === "all") deleteAllTransfers()
-    else deleteTransfer(args[3]);
+    if(typeof arg === "string" && arg.toLowerCase() === "all") AreYouSureInput(deleteAllTransfers);
+    else AreYouSureInput(deleteTransfer, args[3]);
     return;
   }
 
@@ -80,7 +80,7 @@ export function cli(args) {
 
 
 //
-// Method: list-transfers
+// Command: list-transfers
 //
 
 /**
@@ -113,7 +113,7 @@ function printTransfersFromArray(transfers){
 }
 
 //
-// Method: download
+// Command: download
 //
 
 /**
@@ -174,6 +174,11 @@ function download(transfer_id) {
   });
 }
 
+
+//
+// Command: Delete
+//
+
 /**
  * Deletes a specific transfer
  * @param {int} transfer_id 
@@ -198,6 +203,26 @@ function deleteAllTransfers() {
     }
   });
 }
+
+function AreYouSureInput(fun, arg) {
+  const readline = require('readline');
+
+  const rl = readline.createInterface({
+    input: process.stdin,
+    output: process.stdout
+  });
+
+  rl.question('Are you sure? (y/n): ', (answer) => {
+    if (answer.toLowerCase() === 'y') {
+      fun(arg);
+    } 
+    rl.close();
+  });
+}
+
+//
+// Command: Show Transfer
+//
 
 /*
   * Gets the information for a transfer
@@ -268,6 +293,9 @@ function configFileToJSON(config) {
 }
 
 
+//
+// Command: Upload
+//
 
 /*
  * Uploads a file to the FileSender instance
