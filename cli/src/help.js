@@ -1,8 +1,8 @@
 const chalk = require('chalk');
 
 // styling
-const heading = chalk.bgBlue.white;
-const description = chalk.blueBright;
+const heading = chalk.bold;
+const description = chalk.green;
 const greyedOut = chalk.grey;
 
 /**
@@ -36,7 +36,7 @@ export function handleHelp(args) {
             helpDelete();
             break;
 
-        default: console.log(`${chalk.red("Invalid command")}\nUse ${chalk.bgGrey("node filesender-cli help")} to list all available commands`);
+        default: console.log(`${chalk.red("Invalid command")}. Use ${chalk.bgGrey("node filesender-cli help")} to see all available commands`);
     }
 }
 
@@ -44,12 +44,12 @@ export function handleHelp(args) {
  * Prints a help message for using the cli
  */
 function printHelp() {
-    console.log(`\n${chalk.bold("Welcome")} to the ${chalk.bgGreen.white.bold("Filesender CLI")}\n`);
+    console.log(`\n${chalk.bold("Welcome")} to the ${chalk.bgBlue.white.bold("Filesender CLI")}\n`);
     console.log(`${heading("Usage:")} node filesender-cli [command] [options]`);
     console.log("");
     console.log(`${heading("Commands:")}`);
-    console.log(`list-transfers        ${description("Lists basic details for the currently available transfers")}`);
-    console.log(`show-transfer         ${description("Shows the full details of a specific transfer")}`);
+    console.log(`list-transfers        ${description("List basic details for the currently available transfers")}`);
+    console.log(`show-transfer         ${description("Show the full details of a specific transfer")}`);
     console.log(`upload                ${description("Create a new transfer for a recipient(s)")}`);
     console.log(`download              ${description("Download the files of a transfer")}`);
     console.log(`delete                ${description("Delete a transfer")}`);
@@ -127,6 +127,6 @@ function helpDelete(){
     console.log(`\n${chalk.green.bold("delete")}`);
     console.log(`\nDelete a transfer. Can either delete a single transfer by inputting its ID or delete all transfers.`);
     console.log(`\n${heading("Usage:")}`); 
-    console.log(`node filesender-cli delete [id]    ${description("Deletes the transfer with ID [id]")}\n`);
+    console.log(`node filesender-cli delete [id]    ${description("Deletes the transfer with ID [id]")}`);
     console.log(`node filesender-cli delete all     ${description("Deletes all transfers")}\n`);
 }

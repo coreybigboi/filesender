@@ -6,6 +6,7 @@ const http = require('https'); //used to download the config file
 const fs = require('fs'); //used to save the config file
 const ini = require('ini') //used to parse the config file
 const beautify = require('js-beautify').js //used to format the config file
+const chalk = require('chalk'); // used to give output colours
 
 //get the users home directory
 const home = process.env.HOME || process.env.USERPROFILE;
@@ -75,7 +76,7 @@ export function cli(args) {
     return
   }
 
-  console.log("Incorrect usage. Use \'node filesender-cli help\' for help menu")
+  console.log(`${chalk.red("Incorrect usage")}. Use ${chalk.bgGrey("node filesender-cli help")} for help menu`)
 }
 
 
@@ -101,14 +102,14 @@ function printTransfersFromArray(transfers){
     return;
   }
   
-  console.log(`\nYou have ${transfers.length} available transfer${transfers.length > 1 ? 's' : ''}:\n`)
+  console.log(`\nYou have ${chalk.green(transfers.length)} available transfer${transfers.length > 1 ? 's' : ''}:\n`)
   
   for(let transfer of transfers){
-    console.log(`Transfer ID: ${transfer.id}`);
-    console.log(`From: ${transfer.user_email}`);
-    if(transfer.subject) console.log(`Subject: ${transfer.subject}`);
-    if(transfer.message) console.log(`Message: ${transfer.message}`);
-    console.log(`Expires: ${transfer.expires.formatted}\n`);
+    console.log(`${chalk.green("Transfer ID")} ${transfer.id}`);
+    console.log(`${chalk.green("From")} ${transfer.user_email}`);
+    if(transfer.subject) console.log(`${chalk.green("Subject")} ${transfer.subject}`);
+    if(transfer.message) console.log(`${chalk.green("Message")} ${transfer.message}`);
+    console.log(`${chalk.green("Expires")} ${transfer.expires.formatted}\n`);
   }
 }
 
