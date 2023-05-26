@@ -1,3 +1,5 @@
+const chalk = require('chalk');
+
 /**
  * This file deals with the help command for the cli
  */
@@ -6,12 +8,16 @@
 const reset = "\x1b[0m";
 
 // Text color
-const greyedOut = "\x1b[90m";
+
 const red = "\x1b[31m";
 const green = "\x1b[32m";
 const yellow = "\x1b[33m";
 const blue = "\x1b[34m";
 
+// styling
+const heading = chalk.bgBlue.white;
+const description = chalk.blue;
+const greyedOut = chalk.grey;
 
 /**
   * Handles help command
@@ -52,33 +58,33 @@ export function handleHelp(args) {
  * Prints a help message for using the cli
  */
 function printHelp() {
-    console.log(`\n${green}Welcome${reset} to the ${blue}Filesender CLI${reset}!\n`);
-    console.log(`${yellow}Usage:${reset} node filesender-cli [command] [options]`);
+    console.log(`\n${chalk.bold("Welcome")} to the ${chalk.bgGreen.white("Filesender CLI")}\n`);
+    console.log(`${heading("Usage:")} node filesender-cli [command] [options]`);
     console.log("");
-    console.log(`${yellow}Commands:${reset}`)
-    console.log(`list-transfers        ${blue}Lists basic details for the currently available transfers${reset}`);
-    console.log(`show-transfer         ${blue}Shows the full details of a specific transfer${reset}`);
-    console.log(`upload                ${blue}Create a new transfer for a recipient(s)${reset}`);
-    console.log(`download              ${blue}Download the files of a transfer${reset}`);
-    console.log(`delete                ${blue}Delete a transfer${reset}`);
-    console.log(`help                  ${blue}Show this help message${reset}`);
+    console.log(`${heading("Commands:")}`);
+    console.log(`list-transfers        ${description("Lists basic details for the currently available transfers")}`);
+    console.log(`show-transfer         ${description("Shows the full details of a specific transfer")}`);
+    console.log(`upload                ${description("Create a new transfer for a recipient(s)")}`);
+    console.log(`download              ${description("Download the files of a transfer")}`);
+    console.log(`delete                ${description("Delete a transfer")}`);
+    console.log(`help                  ${description("Show this help message")}`);
     console.log("");
-    console.log(`${yellow}Options:${reset}`);
-    console.log(`-v, ${greyedOut}--verbose${reset}          ${blue}Show detailed log messages${reset}`);
-    console.log(`-s, ${greyedOut}--subject${reset}          ${blue}Subject line for the transfer${reset}`)
-    console.log(`-m, ${greyedOut}--message${reset}          ${blue}Message to add to the transfer${reset}`);
-    console.log(`-u, ${greyedOut}--username${reset}         ${blue}Your unique username for filesender if not using config file${reset}`);
-    console.log(`-a, ${greyedOut}--apikey${reset}           ${blue}Your secret API key if not using config file${reset}`);
-    console.log(`-r, ${greyedOut}--recipients${reset}       ${blue}Recipient(s) to include in a transfer${reset}`);
-    console.log(`-f, ${greyedOut}--file${reset}             ${blue}File(s) to include in a transfer${reset}`);
-    console.log(`-e, ${greyedOut}--encryption${reset}       ${blue}Passphrase to use for encryption / decryption${reset}`);
-    console.log(`-d, ${greyedOut}--daysValid${reset}        ${blue}Number of days that the transfer will be available for${reset}`);
+    console.log(`${heading("Options:")}`);
+    console.log(`-v, ${greyedOut("--verbose")}          ${description("Show detailed log messages")}`);
+    console.log(`-s, ${greyedOut("--subject")}          ${description("Subject line for the transfer")}`)
+    console.log(`-m, ${greyedOut("--message")}          ${description("Message to add to the transfer")}`);
+    console.log(`-u, ${greyedOut("--username")}         ${description("Your unique username for filesender if not using config file")}`);
+    console.log(`-a, ${greyedOut("--apikey")}           ${description("Your secret API key if not using config file")}`);
+    console.log(`-r, ${greyedOut("--recipients")}       ${description("Recipient(s) to include in a transfer")}`);
+    console.log(`-f, ${greyedOut("--file")}             ${description("File(s) to include in a transfer")}`);
+    console.log(`-e, ${greyedOut("--encryption")}       ${description("Passphrase to use for encryption / decryption")}`);
+    console.log(`-d, ${greyedOut("--daysValid")}        ${description("Number of days that the transfer will be available for")}`);
     console.log("");
-    console.log(`${yellow}Examples:${reset}`);
-    console.log(`node filesender-cli print-transfers                                                                  ${blue}Prints all of your available transfers${reset}`);
-    console.log(`node filesender-cli upload -u username -a 12345678 -r example@example.com -f file.txt -d 21          ${blue}Creates a transfer for recipient example@example.com with file.txt that is valid for 21 days.${reset}`);
+    console.log(`${heading("Examples:")}`);
+    console.log(`node filesender-cli print-transfers                                                                  ${description("Prints all of your available transfers")}`);
+    console.log(`node filesender-cli upload -u username -a 12345678 -r example@example.com -f file.txt -d 21          ${description("Creates a transfer for recipient example@example.com with file.txt that is valid for 21 days")}`);
     console.log("");
-    console.log(`${green}Please use ${reset}\'filesender-cli help command\'${green} to get detailed information for a specific command's usage${reset}`);
+    console.log(`Please use ${chalk.bgGrey.bold("filesender-cli help command")} to get detailed information for a specific command's usage`);
     console.log("");
 }
 
@@ -97,7 +103,7 @@ function helpListTransfers() {
 function helpShowTransfer(){
     console.log(`\n${yellow}Command:${reset} show-transfer`);
     console.log(`\n${green}Show the full details of a specific transfer. Ensure that the argument after the command is a valid transfer id${reset}`);
-    console.log(`\n${yellow}Usage:${reset} node filesender-cli show-transfer 1234        ${blue}Shows full details for transfer with ID 1234${reset}\n`);
+    console.log(`\n${yellow}Usage:${reset} node filesender-cli show-transfer 1234        ${description("Shows full details for transfer with ID 1234")}\n`);
 }
 
 /**
@@ -107,16 +113,16 @@ function helpUpload(){
     console.log(`\n${yellow}Command:${reset} upload`);
     console.log(`\n${green}Create a new transfer for a recipient(s)${reset}`);
     console.log(`\n${yellow}Options:${reset}`)
-    console.log(`-r, ${greyedOut}--recipients${reset} [required]                           ${blue}Recipient(s) to include in a transfer${reset}`);
-    console.log(`-f, ${greyedOut}--file${reset} [required]                                 ${blue}File(s) to include in a transfer${reset}`);
-    console.log(`-u, ${greyedOut}--username${reset} [optional if config file available]    ${blue}Your unique username for filesender if not using config file${reset}`);
-    console.log(`-a, ${greyedOut}--apikey${reset} [optional if config file available]      ${blue}Your secret API key if not using config file${reset}`);
-    console.log(`-s, ${greyedOut}--subject${reset} [optional]                              ${blue}Subject line for the transfer${reset}`)
-    console.log(`-m, ${greyedOut}--message${reset} [optional]                              ${blue}Message to add to the transfer${reset}`);
-    console.log(`-e, ${greyedOut}--encryption${reset} [optional]                           ${blue}Passphrase to use for encryption${reset}`);
-    console.log(`-d, ${greyedOut}--daysValid${reset} [optional]                            ${blue}Number of days that the transfer will be available for${reset}`);
+    console.log(`-r, ${greyedOut}--recipients${reset} [required]                           ${description("Recipient(s) to include in a transfer")}`);
+    console.log(`-f, ${greyedOut}--file${reset} [required]                                 ${description("File(s) to include in a transfer")}`);
+    console.log(`-u, ${greyedOut}--username${reset} [optional if config file available]    ${description("Your unique username for filesender if not using config file")}`);
+    console.log(`-a, ${greyedOut}--apikey${reset} [optional if config file available]      ${description("Your secret API key if not using config file")}`);
+    console.log(`-s, ${greyedOut}--subject${reset} [optional]                              ${description("Subject line for the transfer")}`)
+    console.log(`-m, ${greyedOut}--message${reset} [optional]                              ${description("Message to add to the transfer")}`);
+    console.log(`-e, ${greyedOut}--encryption${reset} [optional]                           ${description("Passphrase to use for encryption")}`);
+    console.log(`-d, ${greyedOut}--daysValid${reset} [optional]                            ${description("Number of days that the transfer will be available for")}`);
     console.log(`\n${yellow}Usage:${reset}`);
-    console.log(`node filesender-cli upload -u username -a 12345678 -r example@example.com -f file.txt -d 21          ${blue}Creates a transfer for recipient example@example.com with file.txt that is valid for 21 days.${reset}\n`);
+    console.log(`node filesender-cli upload -u username -a 12345678 -r example@example.com -f file.txt -d 21          ${description("Creates a transfer for recipient example@example.com with file.txt that is valid for 21 days")}\n`);
 }
 
 /**
@@ -125,7 +131,7 @@ function helpUpload(){
 function helpDownload(){
     console.log(`\n${yellow}Command:${reset} download`);
     console.log(`\n${green}Download the files of a transfer${reset}`);
-    console.log(`\n${yellow}Usage:${reset} node filesender-cli download 1234        ${blue}Downloads the files for the transfer with ID 1234${reset}\n`);
+    console.log(`\n${yellow}Usage:${reset} node filesender-cli download 1234        ${description("Downloads the files for the transfer with ID 1234")}\n`);
 }
 
 /**
@@ -134,5 +140,5 @@ function helpDownload(){
 function helpDelete(){
     console.log(`\n${yellow}Command:${reset} delete`);
     console.log(`\n${green}Delete a transfer${reset}`);
-    console.log(`\n${yellow}Usage:${reset} node filesender-cli delete 1234        ${blue}Deletes the transfer with ID 1234${reset}\n`);
+    console.log(`\n${yellow}Usage:${reset} node filesender-cli delete 1234        ${description("Deletes the transfer with ID 1234")}\n`);
 }

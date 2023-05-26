@@ -17,6 +17,7 @@
   "license": "ISC",
   "dependencies": {
     "arg": "^5.0.2",
+    "chalk": "^4.1.2",
     "crypto-js": "^4.1.1",
     "esm": "^3.2.25",
     "filereader": "^0.10.3",
