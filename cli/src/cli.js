@@ -191,20 +191,13 @@ function deleteTransfer(transfer_id) {
 /**
  * Called when user selects to delete all
  */
-function deleteAllTransfers(){
-  call('GET', '/rest.php/transfer/', deleteAllTransfersFromArray);
+function deleteAllTransfers() {
+  call('GET', '/rest.php/transfer/', (transfers) => {
+    for (let transfer of transfers) {
+      deleteTransfer(transfer.id);
+    }
+  });
 }
-
-/**
- * Deletes all the transfers in the array
- * @param {Transfer[]} transfers 
- */
-function deleteAllTransfersFromArray(transfers){
-  for(let transfer of transfers){
-    deleteTransfer(transfer.id);
-  }
-}
-
 
 /*
   * Gets the information for a transfer
@@ -498,8 +491,6 @@ function call(method, resource, callback){
     method: method.toUpperCase()
   };
 
-  process.stdout.write("loading...")
-
   const request = http.request(options, (result) => {
     let data = '';
     result.on('data', (chunk) => {
@@ -507,7 +498,6 @@ function call(method, resource, callback){
     });
     result.on('end', () => {
       let parsed_data = JSON.parse(data);
-      process.stdout.write("done.\n")
       callback(parsed_data);
     });
   }).on('error', (error) => {
