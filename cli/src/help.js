@@ -116,8 +116,9 @@ function helpUpload(){
  */
 function helpDownload(){
     console.log(`\n${chalk.green.bold("download")}`);
-    console.log(`\nDownload the files of a transfer`);
-    console.log(`\n${heading("Usage:")} node filesender-cli download [id]    ${description("Downloads the files for the transfer with ID [id]")}\n`);
+    console.log(`\nDownload the files of a transfer.`);
+    console.log(`\n${heading("Usage:")} node filesender-cli download [id]      ${description("Downloads the files for the transfer with ID [id]")}`);
+    console.log(`${heading("Usage:")} node filesender-cli download latest    ${description("Downloads the files for the most recent transfer")}\n`);
 }
 
 /**
